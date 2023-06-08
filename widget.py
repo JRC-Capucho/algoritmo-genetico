@@ -16,13 +16,13 @@ class Widget(QWidget, Ui_Form):
         tam = int(self.TAM.text())
         tamanho_populacao = int(self.TP.text())
         numero_geracoes = int(self.NG.text())
-        taxa_cruzamento = int(self.TC.text())
-        taxa_mutacao = int(self.TM.text())
-        intervalo_geracao = int(self.IG.text())
+        taxa_cruzamento = float(self.TC.text())
+        taxa_mutacao = float(self.TM.text())
+        intervalo_geracao = float(self.IG.text())
         
         mat = self.ag.gerar_problema(tam,5,20)
 
-        sol = self.ag.rotina_ag(mat,tam,
+        pop, fit,corte,desc = self.ag.rotina_ag(mat,tam,
                  tamanho_populacao,
                  numero_geracoes,
                  taxa_cruzamento,
@@ -30,7 +30,8 @@ class Widget(QWidget, Ui_Form):
                  intervalo_geracao
                  )
 
-        string = str(sol)
+        string = "Populacao \t"+str(pop)+ "\nFitness \t"+ str(fit)+ "\nCorte \t" + str(corte) + "\nDesc \t" + str(desc)
+
         self.Result.setPlainText(string)
 
     def clickedButtonResultDefault(self):

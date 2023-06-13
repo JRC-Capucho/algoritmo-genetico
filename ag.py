@@ -1,3 +1,4 @@
+from copy import deepcopy
 from numpy import zeros
 from random import randrange, shuffle, uniform
 from math import ceil
@@ -128,6 +129,56 @@ class AG():
                     del alfabeto[0]
         return desc
 
+    def mutacao(self,
+                tam,
+                descendente,
+                tamanho_populacao,
+                taxa_mutacao):
+
+        quantidade_mutacao = ceil(tamanho_populacao * taxa_mutacao)
+        quantidade_descendente = len(descendente)
+
+        for i in range(quantidade_mutacao):
+            desc = randrange(0,quantidade_mutacao)
+            aux = deepcopy(descendente[desc])
+
+            p1 = randrange(0,tam)
+            p2 = randrange(0,tam)
+
+            x = aux[p1]
+            aux[p1] = aux[p2]
+            aux[p2] = x
+
+            descendente.append(aux)
+
+        return descendente
+
+    def sort(self,populacao,fit,tamanho_populacao):
+        for i in range(tamanho_populacao-1):
+            for j in range(i+1,tamanho_populacao):
+                if fit[i] < fit[j]:
+                    aux_fit = deepcopy(fit[i])
+                    fit[i]  = deepcopy(fit[j])
+                    fit[j]  = deepcopy(aux_fit)
+
+                    aux_populacao = deepcopy(populacao[i])
+                    populacao[i]  = deepcopy(populacao[j])
+                    populacao[j]  = deepcopy(aux_populacao)
+        return populacao, fit
+
+    def nova_populacao(self,
+                       populacao,
+                       descendente,
+                       tamanho_populacao,
+                       intervalo_geracao):
+        elite = ceil(tamanho_populacao * intervalo_geracao)
+        j = 0
+        for i in range(elite,tamanho_populacao):
+            populacao[i] = deepcopy(descendente[j])
+            j += 1
+
+        return populacao
+
 
     def rotina_ag(self,
                   mat,tam,
@@ -153,28 +204,21 @@ class AG():
             desc = self.ajusta_restricao(tam,desc,len(desc),corte)
             print('new desc \t', desc)
 
-        return populacao, fit, corte, desc
-
-    """"
             # mutacao
             desc = self.mutacao(tam,desc,tamanho_populacao,taxa_mutacao)
 
             # ordena pop atual
-            if ig != 0:
-                populacao, fit = sort(populacao,fit,tamanho_populacao)
+            if intervalo_geracao != 0:
+                populacao, fit = self.sort(populacao,fit,tamanho_populacao)
             
             # ordem descendente
-            desc, fitd_d = sort(desc,fit_d,len(desc))
+            desc, fitd_d = self.sort(desc,fit_d,len(desc))
 
             # gera nova
-            populacao = self.novapop(populacao,desc,fit,fit_d,tamanho_populacao,intervalo_geracao)
+            populacao = self.nova_populacao(populacao,desc,fit,fit_d,tamanho_populacao,intervalo_geracao)
 
             # fit da nova pop
             fit = self.aptidao(tam,tamanho_populacao,populacao,mat)
 
-        pop, fit = sort(populacao,fit,tamanho_populacao)
-        return popt[0]
-    """
-
-
-
+        pop, fit = self.sort(populacao,fit,tamanho_populacao)
+        return pop[0]

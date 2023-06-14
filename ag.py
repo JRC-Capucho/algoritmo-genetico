@@ -209,10 +209,10 @@ class AG():
 
             # ordena pop atual
             if intervalo_geracao != 0:
-                populacao, fit = self.sort(populacao,fit,tamanho_populacao)
+                populacao, fit_d = self.sort(populacao,fit,tamanho_populacao)
             
             # ordem descendente
-            desc, fitd_d = self.sort(desc,fit_d,len(desc))
+            desc, fit_d = self.sort(desc,fit_d,len(desc))
 
             # gera nova
             populacao = self.nova_populacao(populacao,desc,fit,fit_d,tamanho_populacao,intervalo_geracao)

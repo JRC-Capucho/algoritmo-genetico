@@ -14,15 +14,15 @@ class Widget(QWidget, Ui_Form):
 
     def clickedButtonResult(self):
         tam = int(self.TAM.text())
-        tamanho_populacao = int(self.TP.text())
+        tamanho_populacao = int(self.TP.text() )
         numero_geracoes = int(self.NG.text())
         taxa_cruzamento = float(self.TC.text())
         taxa_mutacao = float(self.TM.text())
         intervalo_geracao = float(self.IG.text())
         
-        mat = self.ag.gerar_problema(tam,5,20)
+        mat = self.ag.gerar_problema(tam,10,50)
 
-        pop, fit,corte,desc = self.ag.rotina_ag(mat,tam,
+        pop = self.ag.rotina_ag(mat,tam,
                  tamanho_populacao,
                  numero_geracoes,
                  taxa_cruzamento,
@@ -30,7 +30,7 @@ class Widget(QWidget, Ui_Form):
                  intervalo_geracao
                  )
 
-        string = "Populacao \t"+str(pop)+ "\nFitness \t"+ str(fit)+ "\nCorte \t" + str(corte) + "\nDesc \t" + str(desc)
+        string = "Solução final \t"+str(pop)
 
         self.Result.setPlainText(string)
 
@@ -38,7 +38,7 @@ class Widget(QWidget, Ui_Form):
         tam = int(self.TAM.text())
         mat = self.ag.gerar_problema(tam,5,20)
 
-        sol = self.ag.rotina_ag(mat,
+        pop = self.ag.rotina_ag(mat,
                                 tam,
                  15,
                  50,
@@ -47,5 +47,6 @@ class Widget(QWidget, Ui_Form):
                  0.2
                  )
 
-        string = str(sol)
+        string = "Solução final \t"+str(pop)
+
         self.Result.setPlainText(string)

@@ -154,7 +154,7 @@ class AG():
         return descendente
 
     def sort(self,populacao,fit,tamanho_populacao):
-        for i in range(tamanho_populacao-1):
+        for i in range(tamanho_populacao - 1):
             for j in range(i+1,tamanho_populacao):
                 if fit[i] < fit[j]:
                     aux_fit = deepcopy(fit[i])
@@ -176,6 +176,8 @@ class AG():
         for i in range(elite,tamanho_populacao):
             populacao[i] = deepcopy(descendente[j])
             j += 1
+            if j == len(descendente):
+                break
 
         return populacao
 
@@ -198,24 +200,29 @@ class AG():
         for g in range(numero_geracao):
             # cruzamento
             corte, desc = self.cruzamento(tam,populacao,fit,tamanho_populacao,taxa_cruzamento)
-            print(desc)
+            # print(desc)
 
             # ajusta descentendes = restricao do problema
             desc = self.ajusta_restricao(tam,desc,len(desc),corte)
-            print('new desc \t', desc)
+            # print('new desc \t', desc)
 
             # mutacao
             desc = self.mutacao(tam,desc,tamanho_populacao,taxa_mutacao)
 
+            fit_d = self.aptidao(tam,len(desc),desc,mat)
+
             # ordena pop atual
-            if intervalo_geracao != 0:
-                populacao, fit_d = self.sort(populacao,fit,tamanho_populacao)
+            populacao, fit = self.sort(populacao,fit,tamanho_populacao)
             
             # ordem descendente
             desc, fit_d = self.sort(desc,fit_d,len(desc))
 
             # gera nova
-            populacao = self.nova_populacao(populacao,desc,fit,fit_d,tamanho_populacao,intervalo_geracao)
+            populacao = self.nova_populacao(
+                       populacao,
+                       desc,
+                       tamanho_populacao,
+                       intervalo_geracao)
 
             # fit da nova pop
             fit = self.aptidao(tam,tamanho_populacao,populacao,mat)

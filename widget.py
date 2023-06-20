@@ -21,9 +21,12 @@ class Widget(QWidget, Ui_Form):
         taxa_mutacao = float(self.TM.text())
         intervalo_geracao = float(self.IG.text())
         
-        mat = self.ag.gerar_problema(tam,10,50)
+        mat = self.ag.gerar_problema(tam,5,50)
+        mat1 = self.ag.gerar_problema(tam,0,5)
 
-        pop = self.ag.rotina_ag(mat,tam,
+        pop = self.ag.rotina_ag(mat,
+                                mat1,
+                                tam,
                  tamanho_populacao,
                  numero_geracoes,
                  taxa_cruzamento,
@@ -50,13 +53,14 @@ class Widget(QWidget, Ui_Form):
             f = open(str2,"w")
             out = "tp,tc,tm,ig,ng,custo"
             mat = self.ag.gerar_problema(problem,5,50)
+            mat1 = self.ag.gerar_problema(problem,1,5)
             for tp in tamanho_populacao:
                 for tc in taxa_cruzamento:
                     for tm in taxa_mutacao:
                         for ng in numero_geracoes:
                             for ig in intervalo_geracao:
                                 print(problem,tp,tc,tm,ng,ig)
-                                populacao = self.ag.rotina_ag(mat,problem,tp,ng,tc,tm,ig)
+                                populacao = self.ag.rotina_ag(mat,mat1,problem,tp,ng,tc,tm,ig)
                                 out = str(tp) + "," + str(ng) + "," + str(tc) + "," +  str(tm) + "," +  str(ig) + "," + str(populacao)
                                 f.write(out)
             f.close()

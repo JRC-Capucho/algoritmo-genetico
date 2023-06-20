@@ -29,18 +29,18 @@ class AG():
 
         return populacao
 
-    def custo_caminho(self,p,tam,mat):
+    def custo_caminho(self,p,tam,mat,mat1):
         valor = 0
         for i in range(tam-1):
-            valor += mat[p[i]-1][p[i+1]-1]
-        valor += mat[p[tam-1]-1][p[0]-1]
+            valor += mat[p[i]-1][p[i+1]-1] * mat1[p[i]-1][p[i+1]-1]
+        valor += mat[p[tam-1]-1][p[0]-1] * mat1[p[tam-1]-1][p[0]-1]
 
         return valor
 
-    def aptidao(self,tam,populacao,mat):
+    def aptidao(self,tam,populacao,mat,mat1):
         fit = []
         for ind in populacao:
-            fit.append(1/self.custo_caminho(ind,tam,mat))
+            fit.append(1/self.custo_caminho(ind,tam,mat,mat1))
 
         soma = sum(fit)
         fit /= soma
@@ -185,7 +185,9 @@ class AG():
 
 
     def rotina_ag(self,
-                  mat,tam,
+                  mat,
+                  mat1,
+                  tam,
                   tamanho_populacao,
                   numero_geracao,
                   taxa_cruzamento,
@@ -196,7 +198,7 @@ class AG():
         populacao = self.populacao_inicial(tam,tamanho_populacao)
 
         # calcula fit
-        fit = self.aptidao(tam,populacao,mat)
+        fit = self.aptidao(tam,populacao,mat,mat1)
 
 
         # ciclo
@@ -213,7 +215,7 @@ class AG():
             desc = self.mutacao(tam,desc,tamanho_populacao,taxa_mutacao)
 
             # calcula fitness desc
-            fit_d = self.aptidao(tam,desc,mat)
+            fit_d = self.aptidao(tam,desc,mat,mat1)
             # ordena pop atual
             populacao, fit = self.sort(populacao,fit,tamanho_populacao)
             
@@ -228,7 +230,7 @@ class AG():
                        intervalo_geracao)
 
             # fit da nova pop
-            fit = self.aptidao(tam,populacao,mat)
+            fit = self.aptidao(tam,populacao,mat,mat1)
 
         pop, fit = self.sort(populacao,fit,tamanho_populacao)
         return pop[0]
